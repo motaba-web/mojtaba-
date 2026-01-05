@@ -71,7 +71,9 @@ export const TRANSLATIONS = {
     safetyWarning: "Be cautious of untrusted individuals. We are not responsible for off-platform deals.",
     reportFraud: "Report Fraud",
     success: "Success",
-    error: "Error"
+    error: "Error",
+    rememberMe: "Remember Me",
+    buildApk: "Build APK"
   },
   AR: {
     welcome: "مرحباً بك في سمسار",
@@ -115,6 +117,8 @@ export const TRANSLATIONS = {
     safetyWarning: "احذر من الأشخاص غير الموثوق بهم. التطبيق غير مسؤول عن التعاملات خارج المنصة.",
     reportFraud: "تبليغ عن احتيال",
     success: "نجاح",
-    error: "خطأ"
+    error: "خطأ",
+    rememberMe: "تذكرني",
+    buildApk: "إنشاء APK"
   }
 };

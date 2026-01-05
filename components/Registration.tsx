@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { AppLanguage, User } from '../types';
 import { TRANSLATIONS } from '../constants';
 import { DatabaseService } from '../services/database';
@@ -26,11 +26,23 @@ const Registration: React.FC<RegistrationProps> = ({ onVerified, lang, onLangTog
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [targetUser, setTargetUser] = useState<User | null>(null);
+  const [rememberMe, setRememberMe] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const t = TRANSLATIONS[lang];
+
+  // Load remembered credentials on mount
+  useEffect(() => {
+    const savedId = localStorage.getItem('sumsar_remembered_id');
+    const savedPw = localStorage.getItem('sumsar_remembered_pw');
+    if (savedId) {
+      setLoginIdentifier(savedId);
+      setRememberMe(true);
+      if (savedPw) setOtpOrPassword(savedPw);
+    }
+  }, []);
 
   // Strictly enforce Arabic or English letters only for names (No symbols, no numbers)
   const handleNameChange = (val: string) => {
@@ -154,6 +166,15 @@ const Registration: React.FC<RegistrationProps> = ({ onVerified, lang, onLangTog
     setError('');
     setLoading(true);
     
+    // Save credentials if "Remember Me" is checked
+    if (mode === 'login' && rememberMe) {
+      localStorage.setItem('sumsar_remembered_id', loginIdentifier);
+      localStorage.setItem('sumsar_remembered_pw', otpOrPassword);
+    } else if (mode === 'login' && !rememberMe) {
+      localStorage.removeItem('sumsar_remembered_id');
+      localStorage.removeItem('sumsar_remembered_pw');
+    }
+
     setTimeout(() => {
       if (mode === 'login') {
         const identifier = loginIdentifier.toLowerCase().trim();
@@ -259,15 +280,30 @@ const Registration: React.FC<RegistrationProps> = ({ onVerified, lang, onLangTog
         {step === 1 ? (
           <div className="space-y-5">
             {mode === 'login' ? (
-              <div>
-                <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">{lang === AppLanguage.AR ? 'البريد الإلكتروني أو اسم المستخدم' : 'Email or Username'}</label>
-                <input 
-                  value={loginIdentifier} 
-                  onChange={(e) => setLoginIdentifier(e.target.value)} 
-                  type="text" 
-                  placeholder={lang === AppLanguage.AR ? 'أدخل إيميلك أو اسمك الكامل' : 'Email or Full Name'}
-                  className="w-full p-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all text-gray-700 font-bold" 
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-black text-gray-400 uppercase mb-2 ml-1">{lang === AppLanguage.AR ? 'البريد الإلكتروني أو اسم المستخدم' : 'Email or Username'}</label>
+                  <input 
+                    value={loginIdentifier} 
+                    onChange={(e) => setLoginIdentifier(e.target.value)} 
+                    type="text" 
+                    placeholder={lang === AppLanguage.AR ? 'أدخل إيميلك أو اسمك الكامل' : 'Email or Full Name'}
+                    className="w-full p-4 bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all text-gray-700 font-bold" 
+                  />
+                </div>
+                
+                <div className="flex items-center gap-2 px-1">
+                  <input 
+                    type="checkbox" 
+                    id="rememberMe" 
+                    checked={rememberMe} 
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                  />
+                  <label htmlFor="rememberMe" className="text-xs font-bold text-gray-500 cursor-pointer uppercase tracking-widest">
+                    {t.rememberMe}
+                  </label>
+                </div>
               </div>
             ) : (
               <>
@@ -360,12 +396,28 @@ const Registration: React.FC<RegistrationProps> = ({ onVerified, lang, onLangTog
             </p>
             <input 
               value={otpOrPassword} 
-              onChange={(e) => setOtpOrPassword(e.target.value.replace(/\D/g, ''))} 
+              onChange={(e) => setOtpOrPassword(e.target.value)} 
               type={isLoginAdmin ? "password" : "text"} 
               maxLength={isLoginAdmin ? 20 : 6} 
               placeholder={isLoginAdmin ? "••••" : "000000"}
               className={`w-full p-5 text-center text-3xl font-black bg-gray-50 border-2 border-transparent rounded-2xl outline-none focus:border-blue-500 focus:bg-white transition-all ${!isLoginAdmin ? 'tracking-[0.8em]' : ''}`}
             />
+            
+            {mode === 'login' && (
+              <div className="flex items-center gap-2 justify-center">
+                <input 
+                  type="checkbox" 
+                  id="rememberMeStep2" 
+                  checked={rememberMe} 
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                />
+                <label htmlFor="rememberMeStep2" className="text-xs font-bold text-gray-500 cursor-pointer uppercase tracking-widest">
+                  {t.rememberMe}
+                </label>
+              </div>
+            )}
+
             <button disabled={loading} onClick={handleVerify} className="w-full py-5 bg-green-600 text-white rounded-2xl font-black text-lg hover:bg-green-700 transition-all shadow-xl active:scale-[0.98]">
               {loading ? 'Verifying...' : (isLoginAdmin ? (lang === AppLanguage.AR ? 'دخول' : 'Sign In') : t.verify)}
             </button>

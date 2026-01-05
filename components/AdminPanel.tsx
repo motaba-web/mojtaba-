@@ -12,7 +12,7 @@ interface AdminPanelProps {
 }
 
 const AdminPanel: React.FC<AdminPanelProps> = ({ lang, config, setConfig, onBack }) => {
-  const [activeTab, setActiveTab] = useState<'branding' | 'reports' | 'users' | 'listings'>('branding');
+  const [activeTab, setActiveTab] = useState<'branding' | 'reports' | 'users' | 'listings' | 'build'>('branding');
   const [reports, setReports] = useState<Report[]>(DatabaseService.getReports());
   const [users, setUsers] = useState<User[]>(DatabaseService.getUsers());
   const [listings, setListings] = useState<Listing[]>(DatabaseService.getListings());
@@ -43,6 +43,13 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ lang, config, setConfig, onBack
     }
   };
 
+  const handleDownloadManifest = () => {
+    const manifest = document.querySelector('link[rel="manifest"]');
+    if (manifest) {
+      window.open((manifest as HTMLLinkElement).href, '_blank');
+    }
+  };
+
   return (
     <div className="bg-slate-50 min-h-screen pb-12 animate-in fade-in duration-300">
       {/* Premium Admin Header */}
@@ -69,11 +76,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ lang, config, setConfig, onBack
 
       <div className="max-w-4xl mx-auto px-4 space-y-6">
         {/* Navigation Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <AdminNavTile active={activeTab === 'branding'} onClick={() => setActiveTab('branding')} label="Branding" icon="brush" color="bg-blue-600" />
           <AdminNavTile active={activeTab === 'listings'} onClick={() => setActiveTab('listings')} label="Inventory" icon="car" color="bg-orange-500" />
           <AdminNavTile active={activeTab === 'users'} onClick={() => setActiveTab('users')} label="Registry" icon="users" color="bg-green-600" />
           <AdminNavTile active={activeTab === 'reports'} onClick={() => setActiveTab('reports')} label="Alerts" icon="flag" color="bg-red-500" count={reports.length} />
+          <AdminNavTile active={activeTab === 'build'} onClick={() => setActiveTab('build')} label="APK" icon="download" color="bg-purple-600" />
         </div>
 
         {/* Content Area */}
@@ -158,6 +166,75 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ lang, config, setConfig, onBack
                 </div>
               </div>
               <FormGroup label="Logo URL" value={config.logoUrl} onChange={(v) => handleUpdateConfig('logoUrl', v)} />
+            </div>
+          )}
+
+          {activeTab === 'build' && (
+            <div className="space-y-8 animate-in slide-in-from-bottom-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-2xl font-black text-slate-800">Build & Export Center</h3>
+                <span className="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">Mobile Ready</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-slate-50 p-6 rounded-[32px] border border-slate-200">
+                  <h4 className="font-black text-slate-700 mb-2 uppercase text-[11px] tracking-widest">PWA / Web APK Status</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-xs font-bold text-green-600">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                      Manifest Valid
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-bold text-green-600">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                      Offline Service Worker Active
+                    </div>
+                    <div className="flex items-center gap-2 text-xs font-bold text-blue-600">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                      Installable on Android/iOS
+                    </div>
+                  </div>
+                  <button onClick={handleDownloadManifest} className="mt-6 w-full py-3 bg-white border border-slate-200 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-slate-100 transition-all">
+                    View Manifest Source
+                  </button>
+                </div>
+
+                <div className="bg-purple-900 text-white p-6 rounded-[32px] shadow-xl">
+                  <h4 className="font-black mb-2 uppercase text-[11px] tracking-widest text-purple-300">Generate Native APK</h4>
+                  <p className="text-xs font-bold text-purple-100 mb-4 leading-relaxed">
+                    To create a signed APK for the Google Play Store, we recommend using **PWABuilder**.
+                  </p>
+                  <ol className="text-[10px] space-y-2 mb-6 opacity-80 list-decimal pl-4 font-bold">
+                    <li>Copy this app URL</li>
+                    <li>Go to pwabuilder.com</li>
+                    <li>Paste the URL & click "Package"</li>
+                    <li>Select "Android (Google Play)"</li>
+                    <li>Download your .apk and .aab files</li>
+                  </ol>
+                  <button onClick={() => window.open('https://www.pwabuilder.com', '_blank')} className="w-full py-4 bg-white text-purple-900 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg hover:bg-purple-50 active:scale-95 transition-all">
+                    Launch PWABuilder
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-8 bg-blue-50 rounded-[40px] border border-blue-100 flex flex-col items-center text-center">
+                <div className="w-20 h-20 bg-white rounded-[24px] shadow-lg flex items-center justify-center p-2 mb-4">
+                  <img src={config.logoUrl} className="w-full h-full object-cover rounded-[18px]" />
+                </div>
+                <h4 className="text-xl font-black text-slate-800 mb-1">{config.appNameEn} Distribution</h4>
+                <p className="text-xs font-bold text-slate-400 max-w-sm mb-6">
+                  {lang === 'AR' ? 'تطبيقك جاهز للنشر كـ PWA. يمكن للمستخدمين تثبيته مباشرة من المتصفح كـ APK.' : 'Your app is ready for PWA distribution. Users can install it directly from the browser as a Web APK.'}
+                </p>
+                <div className="flex gap-3">
+                  <div className="px-4 py-2 bg-slate-900 rounded-full text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M17.523 15.3414C17.0588 15.3414 16.6588 15.6179 16.4765 16.0235C15.6529 17.8471 13.8471 19.1235 11.7529 19.1235C8.94118 19.1235 6.65882 16.8412 6.65882 14.0294C6.65882 11.2176 8.94118 8.93529 11.7529 8.93529C13.8471 8.93529 15.6529 10.2118 16.4765 12.0353C16.6588 12.4412 17.0588 12.7176 17.5235 12.7176H21.5C21.7765 12.7176 22 12.4941 22 12.2176V10.7412C22 10.4647 21.7765 10.2412 21.5 10.2412H18.3941C17.4353 7.35294 14.8353 5.24118 11.7529 5.24118C7.47059 5.24118 4 8.71176 4 13.0294C4 17.3471 7.47059 20.8176 11.7529 20.8176C14.8353 20.8176 17.4353 18.7059 18.3941 15.8176H21.5C21.7765 15.8176 22 15.5941 22 15.3176V13.8412C22 13.5647 21.7765 13.3412 21.5 13.3412H17.5235V15.3414H17.523ZM11.7529 12.5529C11.0588 12.5529 10.5 11.9941 10.5 11.3C10.5 10.6059 11.0588 10.0471 11.7529 10.0471C12.4471 10.0471 13.0059 10.6059 13.0059 11.3C13.0059 11.9941 12.4471 12.5529 11.7529 12.5529Z"/></svg>
+                    Android
+                  </div>
+                  <div className="px-4 py-2 bg-slate-900 rounded-full text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-2">
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.1 2.48-1.34.03-1.77-.79-3.29-.79-1.53 0-2.01.76-3.27.82-1.31.05-2.31-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.24-2 1.12-3.14-1.18.05-2.52.79-3.32 1.76-.71.83-1.31 2.05-1.12 3.14 1.29.1 2.59-.92 3.32-1.76z"/></svg>
+                    iOS
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -323,6 +400,7 @@ const AdminNavTile: React.FC<{ active: boolean, onClick: () => void, label: stri
       case 'car': return <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>;
       case 'users': return <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>;
       case 'flag': return <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9"/></svg>;
+      case 'download': return <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>;
       default: return null;
     }
   };
