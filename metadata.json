@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Sumsar – سمسار",
+  "description": "A high-security, lightweight mobile and web application for buying and selling cars in Sudan, featuring identity verification, AI-powered image editing, and admin branding control.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}

@@ -1,0 +1,120 @@
+
+import React from 'react';
+
+export const DEFAULT_ADMIN_CONFIG = {
+  appNameAr: "سمسار",
+  appNameEn: "Sumsar",
+  primaryColor: "#0066ff",
+  secondaryColor: "#1e293b",
+  m1Color: "#f59e0b", // Default for (1 m) color
+  logoUrl: "https://picsum.photos/200/200?random=1",
+  fontFamily: "'Tajawal', sans-serif",
+  commissionRate: 0.01
+};
+
+export const BRANDING_PALETTE = [
+  "#FF00FF", "#FF823A", "#FF4646", "#00F7FF", "#DEFF00", 
+  "#00246B", "#E11845", "#8931EF", "#161E54", "#F2CA19", 
+  "#3B1E20", "#57504C", "#2F6364", "#A47864", "#3A7475", 
+  "#101820", "#F2AA4C", "#4CAF50", "#F44336"
+];
+
+export const AVAILABLE_FONTS = [
+  { name: 'Tajawal', value: "'Tajawal', sans-serif" },
+  { name: 'Cairo', value: "'Cairo', sans-serif" },
+  { name: 'Almarai', value: "'Almarai', sans-serif" },
+  { name: 'El Messiri', value: "'El Messiri', sans-serif" },
+  { name: 'Roboto', value: "'Roboto', sans-serif" },
+  { name: 'System Sans', value: "sans-serif" }
+];
+
+export const TRANSLATIONS = {
+  EN: {
+    welcome: "Welcome to Sumsar",
+    slogan: "The only intermediary for car trading in Sudan",
+    commissionWarning: "Fixed commission is 1%. Do not deal with external brokers.",
+    brokerWarning: "The only intermediary is Sumsar App.",
+    noExternalBrokers: "Do not handle any external brokers.",
+    login: "Login",
+    signup: "Sign Up",
+    fullName: "Full Name",
+    email: "Email Address",
+    phone: "Phone Number",
+    address: "Address",
+    idNumber: "ID / Passport Number",
+    uploadId: "Upload National ID / Passport",
+    verify: "Verify",
+    logout: "Logout",
+    listings: "Listings",
+    addListing: "Sell Your Car",
+    profile: "Profile",
+    admin: "Admin Panel",
+    search: "Search Cars",
+    model: "Model",
+    year: "Year",
+    mileage: "Mileage",
+    price: "Price",
+    condition: "Condition",
+    description: "Description",
+    save: "Save",
+    edit: "Edit",
+    delete: "Delete",
+    sold: "Mark as Sold",
+    available: "Available",
+    reports: "Reports",
+    chatWithAI: "Chat with Assistant",
+    nearbyServices: "Nearby Services",
+    offlineMode: "You are currently offline. Changes will sync when back online.",
+    invalidInput: "Only Arabic or English letters allowed. No special characters.",
+    idRequired: "Identity verification image is mandatory.",
+    paymentReceipt: "Upload Payment Receipt",
+    safetyWarning: "Be cautious of untrusted individuals. We are not responsible for off-platform deals.",
+    reportFraud: "Report Fraud",
+    success: "Success",
+    error: "Error"
+  },
+  AR: {
+    welcome: "مرحباً بك في سمسار",
+    slogan: "الوسيط الوحيد لتجارة السيارات في السودان",
+    commissionWarning: "العمولة ثابتة 1%. لا تتعامل مع أي وسيط خارجي.",
+    brokerWarning: "الوسيط الوحيد هو تطبيق سمسار.",
+    noExternalBrokers: "لا تتعامل مع أي وسيط خارجي.",
+    login: "تسجيل الدخول",
+    signup: "إنشاء حساب",
+    fullName: "الاسم الكامل",
+    email: "البريد الإلكتروني",
+    phone: "رقم الهاتف",
+    address: "العنوان",
+    idNumber: "رقم الهوية / جواز السفر",
+    uploadId: "رفع صورة الهوية الوطنية / الجواز",
+    verify: "تحقق",
+    logout: "تسجيل الخروج",
+    listings: "العروض",
+    addListing: "بع سيارتك",
+    profile: "الملف الشخصي",
+    admin: "لوحة التحكم",
+    search: "البحث عن سيارات",
+    model: "الموديل",
+    year: "السنة",
+    mileage: "المسافة المقطوعة",
+    price: "السعر",
+    condition: "الحالة",
+    description: "الوصف",
+    save: "حفظ",
+    edit: "تعديل",
+    delete: "حذف",
+    sold: "تم البيع",
+    available: "متاح",
+    reports: "البلاغات",
+    chatWithAI: "تحدث مع المساعد",
+    nearbyServices: "خدمات قريبة",
+    offlineMode: "أنت الآن غير متصل. سيتم المزامنة عند الاتصال.",
+    invalidInput: "مسموح فقط بالحروف العربية أو الإنجليزية. لا رموز خاصة.",
+    idRequired: "صورة إثبات الهوية إلزامية.",
+    paymentReceipt: "رفع إيصال الدفع",
+    safetyWarning: "احذر من الأشخاص غير الموثوق بهم. التطبيق غير مسؤول عن التعاملات خارج المنصة.",
+    reportFraud: "تبليغ عن احتيال",
+    success: "نجاح",
+    error: "خطأ"
+  }
+};
